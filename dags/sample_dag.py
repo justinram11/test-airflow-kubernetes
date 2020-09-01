@@ -18,12 +18,17 @@ dag = DAG(
     'kubernetes_sample', default_args=default_args, schedule_interval=timedelta(minutes=10))
 
 passing = KubernetesPodOperator(namespace='default',
-                          image="Python:3.6",
-                          cmds=["Python","-c"],
+                          image="python:3.6",
+                          cmds=["python","-c"],
                           arguments=["print('hello world')"],
                           labels={"foo": "bar"},
                           name="passing-test",
                           task_id="passing-task",
                           get_logs=True,
-                          dag=dag
+                          dag=dag,
+                          is_delete_operator_pod=True,
+                          resources={
+                              'request_cpu': '0.25',
+                              'request_memory': '256Mi'
+                          }
                           )
